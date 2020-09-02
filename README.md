@@ -1,16 +1,16 @@
-##DGT - prueba técnica
+## DGT - prueba técnica
 
 He creado una API en .NET Core 3.1 utilizand Entity Framework Core 3.1.7.
 
 Para poder ejecutarlo ejecuta los siguientes commandos en el directorio del proyecto:
 
-### `dotnet ef database`
+ `dotnet ef database`
 
 Esto creará una base de datos de SQL Server en local basandose en la carpeta Migrations.
 
 Una vez creada la DB, basta ejecutar:
 
-### `dotnet run`
+ `dotnet run`
 
 Este commando ejecutará un servidor que atenderá a las siguientes llamadas:
 # Conductores#
