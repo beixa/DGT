@@ -2,15 +2,11 @@
 
 He creado una API en .NET Core 3.1 utilizando Entity Framework Core 3.1.7.
 
-Para poder ejecutarlo ejecuta los siguientes commandos en el directorio del proyecto:
+Para poder ejecutarlo ejecuta el siguiente commando en el directorio del proyecto:
 
- `dotnet ef database update`
+`dotnet run`
 
-Esto creará una base de datos de SQL Server en local basandose en la carpeta Migrations.
-
-Una vez creada la DB, basta ejecutar:
-
- `dotnet run`
+Esto creará una base de datos de SQL Server en local basandose en la carpeta Migrations y creará el servidor web del API.
 
 Este commando ejecutará un servidor que atenderá a las siguientes llamadas:
 # Conductores
