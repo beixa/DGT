@@ -6,9 +6,8 @@ Para poder ejecutarlo ejecuta el siguiente commando en el directorio del proyect
 
 `dotnet run`
 
-Esto creará una base de datos de SQL Server en local basandose en la carpeta Migrations y creará el servidor web del API.
+Esto creará una base de datos de SQL Server en local basandose en la carpeta Migrations y ejecutará un servidor que atenderá a las siguientes llamadas:
 
-Este commando ejecutará un servidor que atenderá a las siguientes llamadas:
 # Conductores
 ## GET 
 **http://localhost:5000/api/conductores** 
