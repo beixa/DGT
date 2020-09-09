@@ -15,16 +15,12 @@ namespace DGT
             using(var scope = host.Services.CreateScope()) 
             {
                 var services = scope.ServiceProvider;
-                try
-                {
-                    var cxt = services.GetRequiredService<DataContext>();
-                    cxt.Database.Migrate();
-                    //TODO seed data
-                }
-                catch (System.Exception)
-                {                    
-                    throw;
-                }
+                
+                var ctx = services.GetRequiredService<DataContext>();
+                ctx.Database.Migrate();
+                    
+                Seed.SeedData(ctx);
+                
             }
             
             host.Run();
