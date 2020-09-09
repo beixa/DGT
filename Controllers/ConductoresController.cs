@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using AutoMapper;
 using DGT.Data;
+using DGT.DTOs;
 using DGT.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,46 +12,48 @@ namespace DGT.Controllers
     public class ConductoresController : ControllerBase
     {
         private readonly IDGTRepo _repo;
+        private readonly IMapper _mapper;
 
-        public ConductoresController(IDGTRepo repo)
+        public ConductoresController(IDGTRepo repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         //GET api/conductores
         [HttpGet]
-        public ActionResult <IEnumerable<Conductor>> GetAllConductores()
+        public ActionResult <IEnumerable<ConductorDTO>> GetAllConductores()
         {
             var conductores = _repo.GetAllConductores();
 
-            return Ok(conductores);
+            return Ok(_mapper.Map<IEnumerable<ConductorDTO>>(conductores));
         }
 
         //GET api/conductores/{dni}
         [HttpGet("{dni}", Name = "GetConductorById")]
-        public ActionResult<Conductor> GetConductorById (string dni)
+        public ActionResult<ConductorDTO> GetConductorById (string dni)
         {
             var conductor = _repo.GetConductorById(dni);
 
             if(conductor != null)
             {
-                return Ok(conductor);
+                return Ok(_mapper.Map<ConductorDTO>(conductor));
             }
             return NotFound();
         }
 
         //GET api/conductores/top/{N}
         [HttpGet("top/{N}")]
-        public ActionResult<Conductor> GetNConductores (int N)
+        public ActionResult<IEnumerable<ConductorDTO>> GetNConductores (int N)
         {
             var conductores = _repo.GetNConductores(N);
 
-            return Ok(conductores);
+            return Ok(_mapper.Map<IEnumerable<ConductorDTO>>(conductores));
         }
 
         //POST api/conductores
         [HttpPost]
-        public ActionResult<Conductor> CreateConductor (Conductor conductor)
+        public ActionResult<ConductorDTO> CreateConductor (Conductor conductor)
         {    
             var conductorFromRepo = _repo.GetConductorById(conductor.Dni);
             if (conductorFromRepo != null)
@@ -59,7 +63,9 @@ namespace DGT.Controllers
             _repo.CreateConductor(conductor);
             _repo.SaveChanges();
 
-            return CreatedAtRoute(nameof(GetConductorById), new { dni = conductor.Dni}, conductor);
+            var conductorDTO = _mapper.Map<ConductorDTO>(conductor);
+
+            return CreatedAtRoute(nameof(GetConductorById), new { dni = conductorDTO.Dni}, conductorDTO);
         }
     }
 }

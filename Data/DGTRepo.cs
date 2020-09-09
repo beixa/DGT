@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DGT.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace DGT.Data
 {
@@ -26,7 +27,7 @@ namespace DGT.Data
 
         public void CreateHabitual(ConductorVehiculo habitual)
         {
-           if (habitual == null)
+            if (habitual == null)
             {
                 throw new ArgumentNullException(nameof(habitual));
             }
@@ -80,12 +81,14 @@ namespace DGT.Data
 
         public IEnumerable<Conductor> GetAllConductores()
         {
-            return _ctx.Conductores.ToList();
+            return _ctx.Conductores.Include(c => c.ConductorVehiculos)
+                                    .ThenInclude(cv => cv.Vehiculo).ToList();
         }
 
         public IEnumerable<ConductorVehiculo> GetAllHabituales()
         {
-            return _ctx.ConductorVehiculos.ToList();
+            return _ctx.ConductorVehiculos.Include(cv =>cv.Conductor)
+                                            .Include(cv => cv.Vehiculo).ToList();
         }
 
         public IEnumerable<Infraccion> GetAllInfracciones()
@@ -95,17 +98,23 @@ namespace DGT.Data
 
         public IEnumerable<Sancion> GetAllSanciones()
         {
-            return _ctx.Sanciones.ToList();
+            return _ctx.Sanciones.Include(s =>s.Conductor)
+                                    .Include(s => s.Vehiculo)
+                                    .ThenInclude(v => v.Infraccion).ToList();
         }
 
         public IEnumerable<Vehiculo> GetAllVehiculos()
         {
-            return _ctx.Vehiculos.ToList();
+            return _ctx.Vehiculos.Include(v => v.Infraccion)
+                                    .Include(c => c.ConductorVehiculos)
+                                    .ThenInclude(cv => cv.Conductor).ToList();
         }
 
         public Conductor GetConductorById(string dni)
         {
-            return _ctx.Conductores.FirstOrDefault(x => x.Dni.Equals(dni));
+            return _ctx.Conductores.Include(c => c.ConductorVehiculos)
+                                    .ThenInclude(cv => cv.Vehiculo)
+                                    .FirstOrDefault(x => x.Dni.Equals(dni));
         }
 
         public ConductorVehiculo GetHabitualByDniAndMatricula(string dni, string matricula)
@@ -124,21 +133,27 @@ namespace DGT.Data
 
         public IEnumerable<Conductor> GetNConductores(int N)
         {
-            return _ctx.Conductores.Take(N).ToList();
+            return _ctx.Conductores.Include(c => c.ConductorVehiculos)
+                                    .ThenInclude(cv => cv.Vehiculo)
+                                    .Take(N).ToList();
         }
 
         public IEnumerable<Sancion> GetSancionesByDni(string dni)
         {
-            return _ctx.Sanciones.Where(x => x.Conductor.Dni.Equals(dni)).ToList();
+            return _ctx.Sanciones.Include(s =>s.Conductor)
+                                    .Include(s => s.Vehiculo)
+                                    .ThenInclude(v => v.Infraccion)
+                                    .Where(x => x.Conductor.Dni.Equals(dni))
+                                    .ToList();
         }
 
         public IEnumerable<string> GetSancionesHabituales(int cnt)
         {
             var sanciones =  _ctx.Sanciones.GroupBy(x => x.Vehiculo.Infraccion.Descripcion)
-                          .OrderByDescending(gp => gp.Count())
-                          .Take(cnt)
-                          .Select(g => g.Key)
-                          .ToList();
+                                            .OrderByDescending(gp => gp.Count())
+                                            .Take(cnt)
+                                            .Select(g => g.Key)
+                                            .ToList();
             
             return sanciones; 
         }

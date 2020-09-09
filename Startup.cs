@@ -1,3 +1,5 @@
+using System;
+using AutoMapper;
 using DGT.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,8 +26,8 @@ namespace DGT
 
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-                
-            services.AddControllers();
+
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());    
 
             services.AddScoped<IDGTRepo, DGTRepo>();
 
