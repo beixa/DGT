@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using AutoMapper;
 using DGT.Data;
+using DGT.DTOs;
 using DGT.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,30 +12,32 @@ namespace DGT.Controllers
     public class sancionesController : ControllerBase
     {
         private readonly IDGTRepo _repo;
+        private readonly IMapper _mapper;
 
-        public sancionesController(IDGTRepo repo)
+        public sancionesController(IDGTRepo repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
 
         //GET api/sanciones
         [HttpGet]
-        public ActionResult <IEnumerable<Sancion>> GetAllSanciones()
+        public ActionResult <IEnumerable<SancionDTO>> GetAllSanciones()
         {
-            var conductores = _repo.GetAllSanciones();
+            var sanciones = _repo.GetAllSanciones();
 
-            return Ok(conductores);
+            return Ok(_mapper.Map<IEnumerable<SancionDTO>>(sanciones));
         }
 
         //GET api/sanciones/{id}
         [HttpGet("{dni}")]
-        public ActionResult<IEnumerable<Sancion>> GetSancionesByDni (string dni)
+        public ActionResult<IEnumerable<SancionDTO>> GetSancionesByDni (string dni)
         {
             var sanciones = _repo.GetSancionesByDni(dni);
 
             if(sanciones != null)
             {
-                return Ok(sanciones);
+                return Ok(_mapper.Map<IEnumerable<SancionDTO>>(sanciones));
             }
             return NotFound();
         }
