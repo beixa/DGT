@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using AutoMapper;
-using DGT.Data;
+using DGT.Data.Repositories;
 using DGT.DTOs;
-using DGT.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DGT.Controllers
@@ -11,10 +10,10 @@ namespace DGT.Controllers
     [ApiController]
     public class sancionesController : ControllerBase
     {
-        private readonly IDGTRepo _repo;
+        private readonly ISancionRepo _repo;
         private readonly IMapper _mapper;
 
-        public sancionesController(IDGTRepo repo, IMapper mapper)
+        public sancionesController(ISancionRepo repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;

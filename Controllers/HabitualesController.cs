@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DGT.Data;
+using DGT.Data.Repositories;
 using DGT.DTOs;
 using DGT.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,16 @@ namespace DGT.Controllers
     [ApiController]
     public class HabitualesController : ControllerBase
     {
-         private readonly IDGTRepo _repo;
+        private readonly IHabitualesRepo _repo;
+        private readonly IConductorRepo _conductorRepo;
+        private readonly IVehiculoRepo _vehiculoRepo;
         private readonly IMapper _mapper;
 
-        public HabitualesController(IDGTRepo repo, IMapper mapper)
-        {
+        public HabitualesController(IHabitualesRepo repo, IConductorRepo conductorRepo, IVehiculoRepo vehiculoRepo, IMapper mapper)
+        { 
             _repo = repo;
+            _conductorRepo = conductorRepo;
+            _vehiculoRepo = vehiculoRepo;
             _mapper = mapper;
         }
 
@@ -60,8 +65,8 @@ namespace DGT.Controllers
         [HttpPost]
         public ActionResult<HabitualDTO> CreateHabitual (ConductorVehiculo habitual)
         {  
-            var conductor = _repo.GetConductorById(habitual.Dni);
-            var vehiculo = _repo.GetVehiculoById(habitual.Matricula);
+            var conductor = _conductorRepo.GetConductorById(habitual.Dni);
+            var vehiculo = _vehiculoRepo.GetVehiculoById(habitual.Matricula);
             var habitualesConductor = _repo.GetHabitualesByDni(habitual.Dni);
             var habituales = _repo.GetHabitualByDniAndMatricula(habitual.Dni, habitual.Matricula);
 

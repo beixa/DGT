@@ -1,6 +1,7 @@
 using System;
 using AutoMapper;
 using DGT.Data;
+using DGT.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,7 +30,11 @@ namespace DGT
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());    
 
-            services.AddScoped<IDGTRepo, DGTRepo>();
+            services.AddScoped<IConductorRepo, ConductorRepo>();
+            services.AddScoped<IVehiculoRepo, VehiculoRepo>();
+            services.AddScoped<IHabitualesRepo, HabitualesRepo>();
+            services.AddScoped<IInfraccionRepo, InfraccionRepo>();
+            services.AddScoped<ISancionRepo, SancionRepo>();
 
         }
 

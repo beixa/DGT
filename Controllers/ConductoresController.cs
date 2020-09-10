@@ -11,10 +11,10 @@ namespace DGT.Controllers
     [ApiController]
     public class ConductoresController : ControllerBase
     {
-        private readonly IDGTRepo _repo;
+        private readonly IConductorRepo _repo;
         private readonly IMapper _mapper;
 
-        public ConductoresController(IDGTRepo repo, IMapper mapper)
+        public ConductoresController(IConductorRepo repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;

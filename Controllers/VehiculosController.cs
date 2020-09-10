@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using DGT.Data;
+using DGT.Data.Repositories;
 using DGT.DTOs;
 using DGT.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -12,13 +13,17 @@ namespace DGT.Controllers
     [ApiController]
     public class VehiculosController : ControllerBase
     {
-        private readonly IDGTRepo _repo;
+        private readonly IVehiculoRepo _repo;
         private readonly IMapper _mapper;
+        private readonly IInfraccionRepo _infraccionRepo;
+        private readonly IHabitualesRepo _habitualRepo;
 
-        public VehiculosController(IDGTRepo repo, IMapper mapper)
+        public VehiculosController(IVehiculoRepo repo, IInfraccionRepo infraccionRepo, IHabitualesRepo habitualRepo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
+            _infraccionRepo = infraccionRepo;
+            _habitualRepo = habitualRepo;
         }
 
         //GET api/vehiculos
@@ -63,19 +68,19 @@ namespace DGT.Controllers
         [HttpPost("{matricula}/{infraccionId}")]
         public ActionResult<VehiculoDTO> CreateInfraccionInVehiculo (string matricula, int infraccionId)
         {    
-            var infraccionFromRepo = _repo.GetInfraccionById(infraccionId);
-            var vehiculoFromRepo = _repo.GetVehiculoById(matricula);
-            var habitualesFromRepo = _repo.GetAllHabituales();
+            var infraccion = _infraccionRepo.GetInfraccionById(infraccionId);
+            var vehiculo = _repo.GetVehiculoById(matricula);
+            var habituales = _habitualRepo.GetAllHabituales();
             
-            if (infraccionFromRepo == null || vehiculoFromRepo == null || !habitualesFromRepo.Any(x => x.Matricula == matricula))
+            if (infraccion == null || vehiculo == null || !habituales.Any(x => x.Matricula == matricula))
             {
                 return BadRequest();
             }   
 
-            _repo.CreateInfraccionInVehiculo(matricula, infraccionId);
+            _repo.CreateInfraccionInVehiculo(vehiculo, infraccion, habituales);
             _repo.SaveChanges();
 
-            var vehiculoDTO = _mapper.Map<VehiculoDTO>(vehiculoFromRepo);
+            var vehiculoDTO = _mapper.Map<VehiculoDTO>(vehiculo);
 
             return CreatedAtRoute(nameof(GetVehiculoById), new { matricula = matricula}, vehiculoDTO);
         }

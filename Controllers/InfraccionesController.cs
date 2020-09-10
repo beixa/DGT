@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using DGT.Data;
+using DGT.Data.Repositories;
 using DGT.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +9,9 @@ namespace DGT.Controllers
     [ApiController]
     public class InfraccionesController : ControllerBase
     {
-        private readonly IDGTRepo _repo;
+        private readonly IInfraccionRepo _repo;
 
-        public InfraccionesController(IDGTRepo repo)
+        public InfraccionesController(IInfraccionRepo repo)
         {
             _repo = repo;
         }
