@@ -1,4 +1,6 @@
-namespace DGT.Models
+using DGT.Models;
+
+namespace DGT.DTOs
 {
     public class InfoVehiculo
     {

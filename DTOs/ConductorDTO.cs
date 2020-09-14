@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using DGT.Models;
 
 namespace DGT.DTOs
 {

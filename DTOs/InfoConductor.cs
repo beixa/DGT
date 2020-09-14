@@ -1,4 +1,4 @@
-namespace DGT.Models
+namespace DGT.DTOs
 {
     public class InfoConductor
     {
